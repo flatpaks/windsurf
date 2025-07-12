@@ -5,7 +5,7 @@ import http.client
 import json
 
 # deb download URL
-# https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/ff497a1ec3dde399fde9c001a3e69a58f2739dac/Windsurf-linux-x64-1.10.5.deb
+# https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/ff497a1ec3dde399fde9c001a3e69a58f2739dac/Windsurf-linux-x64-1.10.7.deb
 
 # to get latest url, get windsurf-stable.codeium.com/api/update/linux-x64-deb/stable/latest
 
@@ -51,21 +51,48 @@ def get_deb():
 
 def update_files(new_ver):
     # update strings in files
+    url = new_ver.get("url")
+    sha = new_ver.get("sha256hash")
+    ver = new_ver.get("windsurfVersion")
+
     update_files = [
         "autobuild.py", ".github/workflows/build.yml",
         "com.windsurf.editor.yaml"
     ]
+    # replace download URL
+    sed_expr = f"sed -e 's,url: .*,url: {url},' -i com.windsurf.editor.yaml"
+    subprocess.run(sed_expr, shell=True)
+    # replace sha256sum
+    sed_expr = f"sed -e 's,sha256: .*,sha256: {sha},' -i com.windsurf.editor.yaml"
+    subprocess.run(sed_expr, shell=True)
+
+    # replace version in files
     for name in update_files:
-        sed_expr = f"sed -e 's,{current},{new_ver},' -i {name}"
+        sed_expr = f"sed -e 's,{current},{ver},' -i {name}"
         print(sed_expr)
         subprocess.run(sed_expr, shell=True)
+
+
+def commit(new_ver):
+    version = new_ver.get("windsurfVersion")
+    statcode = subprocess.run("git status|grep 'nothing to commit'",
+                              shell=True)
+    if statcode.returncode != 0:
+        print("Commiting")
+        commit = f"git commit -am 'autobuild for {version}'"
+        tagetc = f"git tag {version}; git push -f; git push -f origin {version}"
+
+        commit_out = subprocess.run(commit, shell=True)
+        tag_out = subprocess.run(tagetc, shell=True)
+        print(f"Commit: {commit_out.returncode}, tag: {tag_out.returncode}")
 
 
 def __main__():
     new_ver = get_deb()
 
     if new_ver is not None:
-        update_files(new_ver.get("windsurfVersion"))
+        update_files(new_ver)
+        commit(new_ver)
     else:
         print("no new version")
 
