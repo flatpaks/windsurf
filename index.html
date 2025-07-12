@@ -1,0 +1,53 @@
+<html>
+<style>
+       html {
+            font-family:sans-serif;
+        }
+        body {
+            max-width: 768px;
+            padding-left:2.5%;
+            padding-right:2.5%;
+            margin:auto
+        }
+        .mono {
+            font-family: "Source Code Pro", "Hack", monospace;
+            font-weight: normal;
+        }
+        @media (prefers-color-scheme: dark) {
+             html{
+                     max-width=500px;
+                     background: #1E1F21;
+                     color: #EEEFF1;
+                     font-family: sans-serif;
+             }
+             a {
+                     color: #BAD7FF;
+                     text-decoration:none;
+                     border-bottom:thin dotted;
+             }
+         }
+
+         @media (prefers-color-scheme: light) {
+             html{
+                     max-width=500px;
+                     font-family: sans-serif;
+                     background: #EEEFF1;
+             }
+             a {
+                     text-decoration:none;
+                     border-bottom:thin dotted;
+             }
+         }
+
+</style>
+	<title>Unofficial windsurf Flatpak</title>
+	<body>
+		<h3>To install system wide:</h3>
+        <div class=mono>
+		<p>sudo flatpak remote-add --if-not-exists flatpaks-windsurf https://flatpaks.github.io/windsurf/windsurf.flatpakrepo</p>
+		<p>sudo flatpak install flatpaks-windsurf com.windsurf.windsurf</p>
+        </div>
+		<p><b>Depends on <a href="https://flathub.org/setup">Flathub</a> for the runtimes.</b></p>
+
+	</body>
+</html>
