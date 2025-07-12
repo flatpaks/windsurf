@@ -92,7 +92,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: actions/checkout@v4
         with:
-          ref: 66e27f4009df995f98625954aac033e2299e301b
+          ref: acf13c75c93a09b3fc58f0782a3e1e80d9527505
       - name: sync to gh-pages branch repo dir and commit
         if: startsWith(github.ref, 'refs/tags/')
         shell: bash
