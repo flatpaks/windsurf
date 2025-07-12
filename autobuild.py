@@ -23,7 +23,7 @@ import json
 #  "displayName": "Linux x64 for Debian (.deb)"
 #}
 
-current = "1.10.5"
+current = "1.10.7"
 
 
 def get_deb():
