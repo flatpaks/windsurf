@@ -31,6 +31,6 @@ modules:
         bsdtar -Oxf windsurf.deb 'data.tar.xz' |
           bsdtar -xf - \
             --exclude='./usr/share/doc'
-      - mv "usr/*" "${FLATPAK_DEST}/"
+      - mv usr/share/* "${FLATPAK_DEST}/share/"
       - install -Dm0755 run.sh "${FLATPAK_DEST}/bin/run.sh"
 
