@@ -1,0 +1,105 @@
+name: build and deploy flatpak
+on:
+  push:
+    pull_request:
+      branches:
+        - main
+        - master
+    tags:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  a-publish-release:
+    if: startsWith(github.ref, 'refs/tags/')
+    #runs-on: self-hosted
+    runs-on: ubuntu-24.04
+    name: '1 publish release'
+    steps:
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: ncipollo/release-action@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          allowUpdates: true
+          draft: false
+          prerelease: false
+          name: ${{ github.ref }}
+          tag: ${{ github.ref }}
+
+
+  b-build-flatpaks:
+    #runs-on: self-hosted
+    runs-on: ubuntu-24.04
+    name: 'build flatpaks'
+    steps:
+      - name: install secrets
+        shell: bash
+        env:
+          GPG_KEY: ${{secrets.GPG_KEY}}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq -y gpg openssh-client
+          echo "$GPG_KEY" | gpg --import
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: install system package deps
+        shell: bash
+        run: |
+          sudo apt-get update && sudo apt-get install -qq -y bash rsync flatpak elfutils coreutils slirp4netns rootlesskit binfmt-support fuse-overlayfs flatpak-builder qemu-user-static unzip
+      - name: install flatpak deps
+        shell: bash
+        env:
+          CI_USER: runner
+        run: |
+          sudo rm -rf /opt/pakrepo/
+          sudo mkdir -p /opt/pakrepo
+          sudo chown "$USER" /opt/pakrepo
+          sudo flatpak update --noninteractive -y
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install --noninteractive --arch=x86_64 flathub org.electronjs.Electron2.BaseApp//24.08 org.freedesktop.Platform//24.08 org.freedesktop.Sdk//24.08 -y
+      - name: build flatpaks
+        shell: bash
+        run: |
+          # amd64
+          flatpak-builder --arch=x86_64 --gpg-sign=FBEF43DC8C6BE9A7 --repo=/opt/pakrepo --force-clean .builddir com.beeper.beeper.yaml
+          flatpak build-bundle --arch=x86_64 /opt/pakrepo ./beeper.flatpak com.beeper.beeper master
+          sha256sum ./beeper.flatpak | tee -a checksums.txt
+      - name: Upload checksums.txt
+        uses: actions/upload-artifact@v4
+        with:
+          path: checksums.txt
+          name: checksums.txt
+      - name: Upload amd64 flatpak
+        uses: actions/upload-artifact@v4
+        with:
+          path: beeper.flatpak
+          name: beeper.flatpak
+
+      # Publish
+      - name: Upload release artifacts
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          VERSION: "4.0.821"
+        uses: AButler/upload-release-assets@v3.0
+        with:
+          release-tag: ${{ env.VERSION }}
+          files: "beeper.flatpak;checksums.txt"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: checkout gh-pages branch
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/checkout@v4
+        with:
+          ref: 66e27f4009df995f98625954aac033e2299e301b
+      - name: sync to gh-pages branch repo dir and commit
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          rsync -a --delete /opt/pakrepo/ ./repo/
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          git add repo
+          git commit -m 'repo update'
+          git push -f origin HEAD:gh-pages

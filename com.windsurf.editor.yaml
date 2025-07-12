@@ -1,0 +1,33 @@
+app-id: com.windsurf.editor
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '24.08'
+command: run.sh
+separate-locales: false
+rename-desktop-file: windsurf.desktop
+rename-icon: windsurf
+finish-args:
+  - --share=network
+  - --device=all
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --filesystem=xdg-download
+modules:
+  - name: windsurf
+    buildsystem: simple
+    sources:
+      - type: file
+        dest-filename: windsurf.deb
+        only-arches:
+          - x86_64
+        url: https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/ff497a1ec3dde399fde9c001a3e69a58f2739dac/Windsurf-linux-x64-1.10.5.deb
+        sha256: 3291f1afd8ceef2730e92db0c97ffc68be9709074124fe6ac4e3e905f9590ae8
+    build-commands:
+      - |
+        bsdtar -Oxf windsurf.deb 'data.tar.xz' |
+          bsdtar -xf - \
+            --exclude='./usr/share/doc'
+      - mv "usr/*" "${FLATPAK_DEST}/"
+
