@@ -32,6 +32,6 @@ modules:
             --exclude='./usr/share/doc'
       - mv usr/share/* "${FLATPAK_DEST}/share/"
       - mkdir -p "${FLATPAK_DEST}/share/icons/hicolor/1024x1024/apps/"
-      - mv "${FLATPAK_DEST}/share/pixmaps/windsurf.png "${FLATPAK_DEST}/share/icons/hicolor/1024x1024/apps/"
+      - mv "${FLATPAK_DEST}/share/pixmaps/windsurf.png" "${FLATPAK_DEST}/share/icons/hicolor/1024x1024/apps/"
       - install -Dm0755 run.sh "${FLATPAK_DEST}/bin/run.sh"
 
