@@ -1,7 +1,7 @@
 name: run autobuild
 on:
-#  schedule:
-#    - cron: '2 2 * * 2'
+  schedule:
+    - cron: '2 2 2 * *'
   workflow_dispatch:
 jobs:
   autobuild-sh:
