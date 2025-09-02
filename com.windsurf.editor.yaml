@@ -24,8 +24,8 @@ modules:
         dest-filename: windsurf.deb
         only-arches:
           - x86_64
-        url: https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/f8b63909dde4ac913fee41e867b511a598b3b517/Windsurf-linux-x64-1.11.5.deb
-        sha256: b0ee9fa23126c16db971d8d3d7659573072400ffc0277c42c6d894bb31cadeac
+        url: https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/bfcd46e04becbf1670511e8c1e9cb0f1c1d62983/Windsurf-linux-x64-1.12.3.deb
+        sha256: 07a88b123beb656b588dfe7c17b666388630c7b1c7eed1e2cd5a811fe4bd6ec3
     build-commands:
       - |
         bsdtar -Oxf windsurf.deb 'data.tar.xz' |
