@@ -5,13 +5,13 @@ import http.client
 import json
 
 # deb download URL
-# https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/ff497a1ec3dde399fde9c001a3e69a58f2739dac/Windsurf-linux-x64-1.12.6.deb
+# https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/ff497a1ec3dde399fde9c001a3e69a58f2739dac/Windsurf-linux-x64-1.12.12.deb
 
 # to get latest url, get windsurf-stable.codeium.com/api/update/linux-x64-deb/stable/latest
 
 # json object looks like this
 #    {
-#  "url": "https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/7c493d782a6cad0516e79f070d953687991df4ec/Windsurf-linux-x64-1.12.6.deb",
+#  "url": "https://windsurf-stable.codeiumdata.com/linux-x64-deb/stable/7c493d782a6cad0516e79f070d953687991df4ec/Windsurf-linux-x64-1.12.12.deb",
 #  "name": "1.99.3",
 #  "version": "7c493d782a6cad0516e79f070d953687991df4ec",
 #  "productVersion": "1.99.3",
@@ -19,11 +19,11 @@ import json
 #  "timestamp": 1751502599,
 #  "sha256hash": "6de81514272438677bdb080e491bbd5f68ff49ba0548e4627289b5e3f0a227b4",
 #  "supportsFastUpdate": true,
-#  "windsurfVersion": "1.12.6",
+#  "windsurfVersion": "1.12.12",
 #  "displayName": "Linux x64 for Debian (.deb)"
 #}
 
-current = "1.12.6"
+current = "1.12.12"
 
 
 def get_deb():
