@@ -68,12 +68,12 @@ jobs:
           flatpak build-bundle --arch=x86_64 /opt/pakrepo ./windsurf.flatpak com.windsurf.editor master
           sha256sum ./windsurf.flatpak | tee -a checksums.txt
       - name: Upload checksums.txt
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           path: checksums.txt
           name: checksums.txt
       - name: Upload amd64 flatpak
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           path: windsurf.flatpak
           name: windsurf.flatpak
