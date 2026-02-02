@@ -82,7 +82,7 @@ jobs:
       - name: Upload release artifacts
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          VERSION: "1.13.5"
+          VERSION: "1.9544.26"
         uses: AButler/upload-release-assets@v3.0
         with:
           release-tag: ${{ env.VERSION }}
