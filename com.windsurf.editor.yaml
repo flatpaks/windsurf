@@ -33,7 +33,7 @@ modules:
             --exclude='./usr/share/doc'
       - mv usr/share/* "${FLATPAK_DEST}/share/"
       - mkdir -p "${FLATPAK_DEST}/share/icons/hicolor/1024x1024/apps/"
-      - mv "${FLATPAK_DEST}/share/pixmaps/windsurf.png" "${FLATPAK_DEST}/share/icons/hicolor/1024x1024/apps/"
-      - desktop-file-edit --set-key=Exec --set-value="run.sh" "${FLATPAK_DEST}/share/applications/windsurf.desktop"
+      - mv "${FLATPAK_DEST}/share/pixmaps/devin-desktop.png" "${FLATPAK_DEST}/share/icons/hicolor/1024x1024/apps/"
+      - desktop-file-edit --set-key=Exec --set-value="run.sh" "${FLATPAK_DEST}/share/applications/devin-desktop.desktop"
       - install -Dm0755 run.sh "${FLATPAK_DEST}/bin/run.sh"
 
